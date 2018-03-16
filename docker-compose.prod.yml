@@ -7,3 +7,11 @@ services:
       dockerfile: Dockerfile.prod
       args:
         FILE: customerService.js
+
+  invoices:
+    container_name: invoices
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+      args:
+        FILE: invoiceService.js
