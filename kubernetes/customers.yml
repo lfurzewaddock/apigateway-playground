@@ -9,7 +9,7 @@ spec:
       targetPort: 3000
   selector:
     app: customers
-  type: ClusterIP
+  type: NodePort
 ---
 apiVersion: apps/v1beta1
 kind: Deployment
@@ -24,4 +24,5 @@ spec:
     spec:
       containers:
       - name: customers
-        image: xvincentx/apigatewayplayground_customers:microservice
+        image: xvincentx/apigatewayplayground_customers:microservice-gateway-hypermedia
+

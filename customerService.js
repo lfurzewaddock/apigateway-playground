@@ -12,31 +12,9 @@ const Customer = mongoose.model('customers', {
 
 const app = express();
 
-const checkRole = (roleType) => {
-  const roleMap = {
-    admin: 2,
-    user: 1,
-    anonymous: 0
-  }
-
-  return (req, res, next) => {
-    if (req.user.role < roleMap[roleType])
-      return res.status(401).send();
-    next();
-  }
-}
-
-app.use(apikey(function (key, next) {
-  if (key === "adminKey")
-    return next(null, { role: 2 })
-  else if (key === "userKey")
-    return next(null, { role: 1 })
-  return next(null, { role: 0 });
-}));
-
 app.use(bodyParser.json());
 
-app.get('/:id?', checkRole('user'), (req, res) => {
+app.get('/:id?', (req, res) => {
   let query = {};
 
   if (req.params.id)
@@ -44,17 +22,21 @@ app.get('/:id?', checkRole('user'), (req, res) => {
 
   Customer.find(query).lean()
     .then(
-      (customers) => res.json(customers),
+      (customers) => res.json(customers.map((customer) => ({
+        ...customer,
+        invoices_url: `http://invoices.apitest.lan/${customer._id}/invoices`,
+        url: `http://customers.apitest.lan/${customer._id}`
+      }))),
       (err) => res.status(500).send(err));
 });
 
-app.post('/', checkRole('admin'), (req, res) => {
+app.post('/', (req, res) => {
   Customer.create(req.body)
     .then(
       (entity) => res.status(201).send({ id: entity._id }),
       (err) => res.status(500).send(err));
 });
 
-mongoose.connect("mongodb://mongo/application")
+mongoose.connect("mongodb://mongo/application", { useMongoClient: true })
   .then(() => app.listen(3000, () => { console.log("Application is ready to go!") }),
     (err) => console.error(`Error during database connection: ${err}`));
