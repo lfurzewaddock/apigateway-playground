@@ -4,6 +4,7 @@ ENV NODE_ENV production
 ENV CHOKIDAR_USEPOLLING true
 
 RUN mkdir -p /usr/src
+
 WORKDIR /usr/src
 
 COPY package.json server.js apiroot.js jwtScopes.js /usr/src/

@@ -1,6 +1,7 @@
 # Core
 db:
   redis:
+    host: redis
     emulate: true
     namespace: EG
 

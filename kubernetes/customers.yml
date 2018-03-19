@@ -24,5 +24,4 @@ spec:
     spec:
       containers:
       - name: customers
-        image: xvincentx/apigatewayplayground_customers:microservice-gateway-hypermedia
-
+        image: xvincentx/apigatewayplayground_customers:monolith-hypermedia
